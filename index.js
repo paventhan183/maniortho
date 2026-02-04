@@ -40,7 +40,9 @@ document.querySelectorAll('#nav-menu a').forEach(link => {
 
 // Animate counters
 function animateCount(id, target, duration, plus) {
-  let el = document.getElementById(id), start = 0, inc = target / (duration / 20),
+  let el = document.getElementById(id), start = 0, inc = target / (duration / 20)
+    // Safety check if element exists
+    if (!el) return;
     intv = setInterval(() => {
       start += inc; if (start >= target) { start = target; clearInterval(intv); }
 
@@ -57,18 +59,20 @@ animateCount("star", 5, 2000, false);
 let moveUpBtn = document.getElementById("moveUpBtn");
 
 // Show the button when scrolling down
-window.onscroll = function () {
-  if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-    moveUpBtn.style.display = "block";
-  } else {
-    moveUpBtn.style.display = "none";
-  }
-};
+if (moveUpBtn) {
+  window.onscroll = function () {
+    if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+      moveUpBtn.style.display = "block";
+    } else {
+      moveUpBtn.style.display = "none";
+    }
+  };
 
-// When button is clicked, scroll to top smoothly
-moveUpBtn.onclick = function () {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-};
+  // When button is clicked, scroll to top smoothly
+  moveUpBtn.onclick = function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+}
 
 // Animate stat cards when they scroll into view
 const observer = new IntersectionObserver((entries, observer) => {
@@ -113,7 +117,10 @@ const mapObserver = new IntersectionObserver((entries, observer) => {
 }, { threshold: 0.1 });
 
 // Tell the observer to watch for the map iframe
-mapObserver.observe(document.getElementById('google-map-iframe'));
+const mapIframe = document.getElementById('google-map-iframe');
+if (mapIframe) {
+  mapObserver.observe(mapIframe);
+}
 
 // Highlight active navigation link on scroll
 const navLinks = document.querySelectorAll('nav a[href^="#"]');
